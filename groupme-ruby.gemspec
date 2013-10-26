@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'groupme/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "groupme"
+  spec.name          = "groupme-ruby"
   spec.version       = Groupme::VERSION
   spec.authors       = ["Matthew Perry"]
   spec.email         = ["muffinman616@gmail.com"]
@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
 
   spec.add_dependency "her"
+  spec.add_dependency "faraday_middleware"
 end
