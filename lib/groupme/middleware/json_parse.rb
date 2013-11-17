@@ -5,6 +5,8 @@ module GroupMe
     class JsonParse < Faraday::Response::Middleware
       def on_complete(env)
         body = env[:body]
+        return body if body.strip.empty? # Add some more error handling
+
         json = MultiJson.load(body, symbolize_keys: true)
         data = json.delete :response
         metadata = json.delete :meta

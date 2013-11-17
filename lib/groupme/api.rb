@@ -2,10 +2,12 @@ require 'faraday_middleware'
 require 'groupme/version'
 require 'groupme/middleware/json_parse'
 require 'groupme/api/groups'
+require 'groupme/api/bots'
 
 module GroupMe
   class API
     include GroupMe::API::Groups
+    include GroupMe::API::Bots
     ENDPOINT = 'https://api.groupme.com/'
 
     attr_accessor :token
