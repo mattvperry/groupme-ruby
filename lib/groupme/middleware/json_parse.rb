@@ -4,7 +4,8 @@ module GroupMe
   module Middleware
     class JsonParse < Faraday::Response::Middleware
       def on_complete(env)
-        json = MultiJson.load(env[:body], symbolize_keys: true)
+        body = env[:body]
+        json = MultiJson.load(body, symbolize_keys: true)
         data = json.delete :response
         metadata = json.delete :meta
         errors = []

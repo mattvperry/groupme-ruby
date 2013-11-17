@@ -1,47 +1,23 @@
-require "her"
-require "faraday_middleware"
-
-require "groupme/version"
-require "groupme/middleware/json_parse"
+require 'groupme/api'
 
 module GroupMe
-  MODELS = %i(group)
-
   class << self
-    def configure(&block)
-      opts = Struct.new(:token).new
-      yield opts
+    # A GroupMe::API, used when callign methods on the GroupMe module itself.
+    #
+    # @return [GroupMe::API]
+    def api
+      @api ||= GroupMe::API.new
+    end
 
-      raise "An authentication token is required" unless opts.token
-
-      Her::API.setup url: 'https://api.groupme.com/v3/' do |conn|
-        # Request
-        conn.request :json
-        conn.headers["X-Access-Token"] = opts.token
-
-        # Response
-        conn.response :logger
-        conn.use GroupMe::Middleware::JsonParse
-
-        # Adapter
-        conn.adapter Faraday.default_adapter
-      end
-
-      require_libs *MODELS
+    def respond_to?(method_name, include_private = false)
+      api.respond_to?(method_name, include_private) || super
     end
 
     private
 
-    def require_libs(*libs)
-      libs.each { |lib| require "groupme/#{lib}" }
-    end
-
-    def const_missing(name)
-      if MODELS.include? name.downcase
-        raise "You must configure GroupMe before using any models"
-      else
-        raise NameError, "uninitialized constant #{self.name}::#{name}"
-      end
+    def method_missing(method_name, *args, &block)
+      return super unless api.respond_to? method_name
+      api.send(method_name, *args, &block)
     end
   end
 end
