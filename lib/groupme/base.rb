@@ -5,7 +5,7 @@ module GroupMe
         new(response[:body][:data])
       end
 
-      # Define methods that retrieve the vale from attributes
+      # Define methods that retrieve the value from attributes
       #
       # @param attrs [Array, Symbol]
       def attr_reader(*attrs)
